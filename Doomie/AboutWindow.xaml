@@ -1,0 +1,174 @@
+﻿<Window x:Class="Doomie.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:Doomie" mc:Ignorable="d"
+        Title="About" 
+        Height="320" 
+        Width="320"
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="6">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Image 
+        Source="Doomie.ico" Width="32" Grid.Column="0" Grid.Row="0"/>
+        
+        <Label 
+        Content="Doomie!" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+
+        <Label 
+        Content="A simple frontend launcher for id Tech 1 source ports." Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+
+        <TabControl Grid.Row="3" Margin="0 6 0 0">
+            <TabItem Header="Information">
+                <Grid Margin="6">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition  Height="Auto"/>
+                        <RowDefinition  Height="Auto"/>
+                        <RowDefinition/>
+
+                    </Grid.RowDefinitions>
+                    
+                    <Label 
+                    Content="Version 1.6" FontWeight="Bold" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+
+                    <Label 
+                    Content="Written by buja-buja in 2018" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Label 
+                    Content="Icon artwork by NightFright" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    Uses
+                        <Hyperlink 
+                        NavigateUri="https://github.com/punker76/gong-wpf-dragdrop" 
+                        RequestNavigate="Hyperlink_RequestNavigate">
+                        GongSolutions.WPF.DragDrop
+                        </Hyperlink>
+                    library
+                    </TextBlock>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Version log">
+                <ScrollViewer>
+                    <StackPanel Orientation="Vertical" Margin="6 0 6 6">
+                        <Expander IsExpanded="True" Header="Version 1.6 (02/09/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Icon added, thank you NightFright.
+                                <LineBreak/>
+                                ▪ "Names.map" updated as per NightFright's contributions.
+                                <LineBreak/>
+                                ▪ Playlists shows a custom icon if a .PNG file named after the Playlist exists where the Playlist file is located.
+                                <LineBreak/>
+                                ▪ Columns resize automatically according to biggest row length.
+                                <LineBreak/>
+                                ▪ Remembers window Splitter position.
+                                <LineBreak/>
+                                ▪ Remembers Window position on screen.
+                                <LineBreak/>
+                                ▪ Removed support for Playlists drag and drop.
+                                <LineBreak/>
+                                ▪ Allows reordering of Playlists.
+                            </TextBlock>
+                        </Expander>
+                        <Expander IsExpanded="False" Header="Version 1.5 (30/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ File "Names.map" if exists will be looked at to map IWads names.
+                                <LineBreak/>
+                                ▪ Added support to load PK7 files.
+                                <LineBreak/>
+                                ▪ Corrected an issue where un-maximizing the window would not use the previous window width.
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.4 (26/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Fixed a bug where "Save As" functionality if saving over an existing Playlist would crash.
+                                <LineBreak/>
+                                ▪ Fixed a bug where "Remove playlist(s)" was calling the save playlist functionality also for playlists other than the selected one(s).
+                                <LineBreak/>
+                                ▪ List of loaded Playlists persists through sessions.
+                                <LineBreak/>
+                                ▪ Reworked the "About" dialog a little bit.
+                                <LineBreak/>
+                                ▪ Added Playlist "Location" on to the "Save changes" dialog.
+                                <LineBreak/>
+                                ▪ Removed command line parameters functionality.
+                                <LineBreak/>
+                                ▪ Added identification for a few more stand-alone IWads.
+                                <LineBreak/>
+                                ▪ Doomie settings are now saved in "Doomie.cfg" file instead of "Settings.ini".
+                                <LineBreak/>
+                                ▪ Saves last "Import" and "Load" location used for Playlists, Sourceport, IWAD and WAD files separately in "Doomie.cfg" file.
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.3.1 (24/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Fixed a bug when using directories with spaces was not passing paths with spaces to the Sourceport correctly.
+                                <LineBreak/>
+                                ▪ A "Not found" message is displayed when the IWad or Sourceport used is missing.
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.3 (23/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Implemented support for arguments per Sourceport.
+                                <LineBreak/>
+                                ▪ Saves the window size in "Settings.ini" file (this file is saved where the application is located). <Italic>(Changed to "Doomie.cfg" in later versions)</Italic>
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.2 (19/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Added Sourceport parameter parsing ability at the command line. <Italic>(Removed in later versions)</Italic>
+                                <LineBreak/>
+                                ▪ Importing PWAD files already in Playlist keeps existing PWAD with it's flag settings.
+                                <LineBreak/>
+                                ▪ Prompts for saving Playlist changes on "Remove" or "Clear" if any.
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.1 (14/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Fixed a bug while importing PWAD files, if extension was different than lower-case would not import the files.
+                                <LineBreak/>
+                                ▪ Implemented support for Sourceport's "-merge" argument.
+                                <LineBreak/>
+                                ▪ Added support to load DEH and BEX files.
+                                <LineBreak/>
+                                ▪ Reworked the "About" dialog.
+                            </TextBlock>
+                        </Expander>
+                        <Expander Header="Version 1.0 (12/08/2018)" FontWeight="Bold" Margin="0 6 0 0">
+                            <TextBlock Margin="24 6 6 0" FontWeight="Normal" TextWrapping="Wrap">
+                                ▪ Initial release.
+                            </TextBlock>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <TabItem Header="License">
+                <ScrollViewer>
+                    <TextBlock Margin="6" TextWrapping="Wrap">
+                        This software is Freeware and is available for your use at no monetary cost.<LineBreak/> 
+                        <LineBreak/>
+                        In other words, while this software may be used without payment this is still proprietary software and modification, re-distribution or reverse-engineering without the author's permission is prohibited.
+                    </TextBlock>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

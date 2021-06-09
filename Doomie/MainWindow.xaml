@@ -1,0 +1,471 @@
+﻿<Window x:Class="Doomie.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:Doomie" mc:Ignorable="d"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        Title="Doomie" 
+        Height="380" 
+        MinHeight="350"
+        MinWidth="500"
+        Width="560" 
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <DataTemplate 
+        x:Key="CheckBox_Load">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox 
+                Checked="CheckBox_Load_Toogle"
+                Unchecked="CheckBox_Load_Toogle"
+                IsEnabled="{Binding Wad_Enabled}" 
+                IsChecked="{Binding Wad_Load}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate 
+        x:Key="CheckBox_Merge">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox 
+                Checked="CheckBox_Merge_Toogle"
+                Unchecked="CheckBox_Merge_Toogle"
+                IsEnabled="{Binding Wad_Enabled}" 
+                IsChecked="{Binding Wad_Merge}"/>
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="{x:Type Label}" TargetType="Label">
+            <Style.Triggers>
+                <Trigger Property="ToolTip" Value="{x:Static sys:String.Empty}">
+                    <Setter Property="ToolTipService.IsEnabled" Value="False" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <ProgressBar
+            x:Name="ProgressBar_Load" 
+            Minimum="0" 
+            Maximum="100" 
+            ValueChanged="ProgressBar_Load_ValueChanged"
+            Visibility="Collapsed"/>
+            <TextBlock
+            x:Name="TextBlock_Load" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            Visibility="Collapsed"/>
+        </Grid>
+
+        <Grid             x:Name="Grid_Left" 
+Grid.Row="1" Margin="6 6 6 6">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Column="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Column="0" Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+
+                        <Button 
+                        x:Name="Button_Playlist_New" 
+                        Click="Button_Playlist_New_Click"
+                        ToolTip="Creates a new empty Playlist"
+                        Content="   New...   " Margin="0 0 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Button 
+                        x:Name="Button_Playlist_Open" 
+                        Click="Button_Playlist_Open_Click"
+                        ToolTip="Opens a Playlist"
+                        Content="   Open...   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Button 
+                        x:Name="Button_Playlist_Import" 
+                        Click="Button_Playlist_Import_Click"
+                        ToolTip="Imports all Playlists from a directory"
+                        Content="   Import...   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Button 
+                        x:Name="Button_Playlist_Save" 
+                        Click="Button_Playlist_Save_Click"
+                        ToolTip="Saves the selected Playlist(s)"
+                        Content="   Save   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Button 
+                        x:Name="Button_Playlist_Save_As" 
+                        Click="Button_Playlist_Save_As_Click"
+                        ToolTip="Saves the selected Playlist(s) as new Playlist(s)"
+                        Content="   Save As...   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Button 
+                        x:Name="Button_Playlist_Clear" 
+                        Click="Button_Playlist_Clear_Click"
+                        ToolTip="Removes all listed Playlists entries"
+                        Content="   Clear   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+
+                        <Separator Margin="0 6 6 0"/>
+
+                        <ToggleButton 
+                        x:Name = "ToogleButton_Save_Session" 
+                        IsChecked="True"
+                        ToolTip="Persists list of loaded Playlists through different sessions"
+                        Content="   Save Session   " Margin="0 6 6 0" HorizontalAlignment="Stretch"/>
+                    
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Bottom">
+
+                        <Button 
+                        x:Name="Button_Playlist_About" 
+                        Click="Button_About_Click"
+                        Content="   About   " Margin="0 0 6 0" HorizontalAlignment="Stretch"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+                <ListView 
+                ItemsSource="{Binding Playlist}"
+                x:Name="ListView_Playlists" 
+                SelectionChanged="ListView_Playlists_SelectionChanged"
+                AllowDrop="True"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True" Grid.Row="0" Grid.Column="2">
+                    <ListView.Resources>
+                        <ContextMenu 
+                        x:Key="ItemContextMenu">
+                            <MenuItem 
+                            x:Name="ItemContextMenu_Playlists_Remove"
+                            Header="Remove playlist(s)" 
+                            Click="ItemContextMenu_Playlists_Remove_Click"/>
+                        </ContextMenu>
+                    </ListView.Resources>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" >
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.View>
+                        <GridView>
+
+                            <GridViewColumn Header="">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding Playlist_Icon}" Width="16" Height="16" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn 
+                            Header="Playlist" Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock 
+                                        Text="{Binding Playlist_Name}">
+                                            <TextBlock.Style>
+                                                <Style 
+                                                TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger 
+                                                        Binding="{Binding Playlist_Changed}" 
+                                                        Value="True">
+                                                            <Setter Property="FontWeight" Value="Bold"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn 
+                            Header="Files" 
+                            DisplayMemberBinding="{Binding Playlist_Files}" Width="Auto"/>
+
+                            <GridViewColumn 
+                            Header="Location" 
+                            DisplayMemberBinding="{Binding Playlist_Location}" Width="Auto"/>
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
+
+            <GridSplitter 
+            ResizeBehavior="PreviousAndNext" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
+
+            <Grid Grid.Column="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                    Content="Source Port:" Grid.Column="0" Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Right"/>
+
+                    <Label 
+                    Content="Arguments:" Grid.Column="0" Grid.Row="1" FontWeight="Bold" HorizontalAlignment="Right">
+                        <Label.Style>
+                            <Style TargetType="{x:Type Label}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CheckBox_Parameters, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+
+                    <Label 
+                    Content="IWad:" Grid.Column="0" Grid.Row="2" FontWeight="Bold" HorizontalAlignment="Right"/>
+
+                    <Grid Grid.Column="1" Grid.Row="0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label 
+                        x:Name="Label_SourcePort"
+                        ToolTip="{Binding SelectedItem.Playlist_SourcePort, ElementName=ListView_Playlists, UpdateSourceTrigger=PropertyChanged}"
+                        ToolTipService.ShowOnDisabled="False" Grid.Column="0" Grid.Row="0">
+                            <TextBlock 
+                            x:Name="TextBlock_SourcePort"
+                            TextTrimming="CharacterEllipsis"
+                            Text="{Binding SelectedItem.Playlist_SourcePort_Description, ElementName=ListView_Playlists, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Label>
+
+                        <CheckBox 
+                        Content="Show Args"
+                        x:Name="CheckBox_Parameters" 
+                        IsChecked="{Binding SelectedItem.Playlist_SourcePort_HasParameters, ElementName=ListView_Playlists}"
+                        Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 3 0 3"/>
+
+                        <Button 
+                        x:Name="Button_SourcePort_Open" 
+                        Click="Button_SourcePort_Open_Click"
+                        ToolTip="Selects the Source Port"
+                        Content="   ...   " Grid.Column="2" Grid.Row="0" Margin="6 3 0 3"/>
+
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="1">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox 
+                        x:Name="TextBox_Parameters" Text="{Binding SelectedItem.Playlist_SourcePort_Parameters, ElementName=ListView_Playlists, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="0" Grid.Row="0" Margin="6 3 0 3">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=CheckBox_Parameters, Path=IsChecked}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="2">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label 
+                    x:Name="Label_IWad"
+                    ToolTip="{Binding SelectedItem.Playlist_IWad, ElementName=ListView_Playlists, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ShowOnDisabled="False" Grid.Column="0" Grid.Row="0">
+                            <TextBlock 
+                        x:Name="TextBlock_Iwad"
+                        TextTrimming="CharacterEllipsis"
+                        Text="{Binding SelectedItem.Playlist_IWad_Description, ElementName=ListView_Playlists, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Label>
+
+                        <Button 
+                    x:Name="Button_Iwad_Open" 
+                    Click="Button_Iwad_Open_Click"
+                    ToolTip="Selects which IWad file to load"
+                    Content="   ...   " Grid.Column="1" Grid.Row="0" Margin="6 3 0 6"/>
+                    </Grid>
+
+                </Grid>
+
+                <ListView 
+                ItemsSource="{Binding SelectedItem.Wadlist, ElementName=ListView_Playlists}"
+                x:Name="ListView_Pwads" 
+                SelectionChanged="ListView_Pwads_SelectionChanged" 
+                AllowDrop="True" 
+                Drop="ListView_Pwads_Drop"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True" Grid.Row="1" BorderThickness="1" Margin="0 0 0 0">
+                    <ListView.Resources>
+                        <ContextMenu 
+                        x:Key="ItemContextMenu">
+                            <MenuItem 
+                            x:Name="ItemContextMenu_Pwads_Toogle_Load"
+                            Header="Toogle load" 
+		     	            Click="ItemContextMenu_Pwads_Toogle_Load"
+                            IsEnabled="{Binding Path=Wad_Enabled}"/>
+                            <Separator/>
+                            <MenuItem 
+                            x:Name="ItemContextMenu_Pwads_Remove"
+                            Header="Remove Pwad(s)" 
+                            Click="ItemContextMenu_Pwads_Remove_Click"/>
+                        </ContextMenu>
+                    </ListView.Resources>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" >
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.View>
+
+                        <GridView>
+                            <GridViewColumn 
+                            Header="Load" 
+                            CellTemplate="{StaticResource CheckBox_Load}" Width="Auto"/>
+
+                            <GridViewColumn 
+                            Header="PWad" 
+                            DisplayMemberBinding="{Binding Wad_File}" Width="Auto"/>
+
+                            <!--<GridViewColumn 
+                            Header="Description" 
+                            DisplayMemberBinding="{Binding Wad_Description}" Width="Auto"/>-->
+
+                            <GridViewColumn 
+                            Header="Merge" 
+                            CellTemplate="{StaticResource CheckBox_Merge}" Width="Auto"/>
+
+                            <GridViewColumn 
+                            Header="Status" 
+                            DisplayMemberBinding="{Binding Wad_Status}" Width="Auto"/>
+
+                            <GridViewColumn 
+                            Header="Location" 
+                            DisplayMemberBinding="{Binding Wad_Location}" Width="Auto"/>
+
+                        </GridView>
+
+                    </ListView.View>
+                </ListView>
+
+                <Grid Grid.Row="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+
+                        <Button 
+                        x:Name="Button_Pwad_Open" 
+                        Click="Button_Pwad_Open_Click"
+                        ToolTip="Adds a PWad file to the Playlist"
+                        Content="   Open...   " Margin="0 6 6 0"/>
+
+                        <Button 
+                        x:Name="Button_Pwad_Import" 
+                        Click="Button_Pwad_Import_Click"
+                        ToolTip="Imports all PWad files from a given directory into the Playlist"
+                        Content="   Import...   " Margin="0 6 6 0"/>
+
+                        <Button 
+                        x:Name="Button_Pwad_Clear" 
+                        Click="Button_Pwad_Clear_Click"
+                        ToolTip="Removes all PWad files from the Playlist"
+                        Content="   Clear   " Margin="0 6 6 0"/>
+
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+
+                        <Button 
+                        x:Name="Button_Play" 
+                        Click="Button_Play_Click" 
+                        Content="   Play   "  Margin="0 6 0 0"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</Window>
